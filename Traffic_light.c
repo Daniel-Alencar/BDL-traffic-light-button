@@ -15,9 +15,12 @@ void setup_button() {
     gpio_pull_up(BUTTON_PIN);
 }
 
+// Define o status da execução da task
 bool switching_leds_task_initialized = false;
+// Controla os estados dos leds
 uint traffic_light_state = 0;
 
+// Funcção de callback do alarme
 int64_t switch_leds(alarm_id_t id, void *user_data) {
 
     traffic_light_state++;
@@ -26,15 +29,24 @@ int64_t switch_leds(alarm_id_t id, void *user_data) {
         if(traffic_light_state == 0) {
             printf("Três leds!\n");
             set_three_leds();
+
+            // Adiciona alarme para o próximo estado dos leds
             add_alarm_in_ms(3000, switch_leds, NULL, false);
+
         } else if(traffic_light_state == 1) {
             printf("Dois leds!\n");
             set_two_leds();
+
+            // Adiciona alarme para o próximo estado dos leds
             add_alarm_in_ms(3000, switch_leds, NULL, false);
+
         } else if(traffic_light_state == 2) {
             printf("Um led!\n");
             set_one_led();
+
+            // Adiciona alarme para o próximo estado dos leds
             add_alarm_in_ms(3000, switch_leds, NULL, false);
+
         } else if(traffic_light_state == 3) {
             printf("Zero leds!\n");
             set_zero_led();
@@ -66,6 +78,7 @@ int main()
                 printf("Três leds!\n");
                 set_three_leds();
 
+                // Adiciona o alarme para fazer a execução depois de 3 segundos
                 add_alarm_in_ms(3000, switch_leds, NULL, false);
             }
         }
